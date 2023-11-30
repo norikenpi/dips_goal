@@ -30,14 +30,6 @@ class MySubscriberNode(Node):
         
 
         # サブスクライバーの生成
-        """
-        self.sub = self.create_subscription(
-            AutowareState, # メッセージ型
-            "/autoware/state", # トピック名
-            self.listener_callback,
-            10,
-        )
-        """
         self.sub = self.create_subscription(
             VelocityReport, # メッセージ型
             "/vehicle/status/velocity_status", # トピック名
@@ -125,27 +117,6 @@ class MySubscriberNode(Node):
             self.pub.publish(goal_data)
             self.send_service_request()
             print(goal_data)
-    """
-    def listener_callback(self, msg: AutowareState):
-        state_value_prev = self.state_value_prev
-        state_value = msg.state
-        self.state_value_prev = state_value
-        print(state_value)
-
-        if state_value == 6 and state_value_prev == 5: #ゴールに到着したら
-            now = self.clock.now()
-            goal_data = PoseStamped()
-            print(now.to_msg())
-            goal_data.header.stamp = now.to_msg()
-            goal_data.header.frame_id = "map"
-
-            goal_data.pose = self.goal_list[self.pass_count]
-            self.pass_count = self.pass_count + 1
-
-            self.pub.publish(goal_data)
-            self.send_service_request()
-            print(goal_data)
-    """
 
 def main(args=None):
     rclpy.init(args=args)
@@ -173,26 +144,3 @@ def create_pose(x, y, z, qx, qy, qz, qw):
 if __name__ == "__main__":
     main()
 
-            
-
-# cmd = AckermannControlCommand()
-#now = Clock().now().nanoseconds
-#num = int(str(now)[0])
-
-# ひたすら前進するように
-# cmd.longitudinal.speed = math.sin(num)
-# cmd.longitudinal.acceleration = math.sin(num)
-# cmd.longitudinal.speed = -1000000000.0
-# cmd.longitudinal.acceleration = -1000000000.0
-
-# cmdをパブリッシュ
-#self.pub.publish(state_value)
-"""
-goal_data.pose.position.x = 3762.1142578125
-goal_data.pose.position.y = 73740.984375
-goal_data.pose.position.z = 0.0
-goal_data.pose.orientation.x = 0.0
-goal_data.pose.orientation.y = 0.0
-goal_data.pose.orientation.z = -0.9993257713189098
-goal_data.pose.orientation.w = 0.0367151573313547
-"""
